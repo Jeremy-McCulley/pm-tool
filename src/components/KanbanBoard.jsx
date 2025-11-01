@@ -1,6 +1,6 @@
 import React from 'react';
-import { DragDropContext } from 'react-beautiful-dnd';
-import KanbanColumn from './KanbanColumn';
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import KanbanColumn from "./Task/KanbanColumn.jsx";
 import { FiArrowLeft } from 'react-icons/fi';
 
 /**

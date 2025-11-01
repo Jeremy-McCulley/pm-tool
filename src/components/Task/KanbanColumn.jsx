@@ -1,5 +1,5 @@
 import React from 'react';
-import { Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import TaskCard from '../Task/TaskCard';
 import { FiPlusCircle } from 'react-icons/fi';
 

@@ -1,35 +1,34 @@
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-// 1. Initialize Firebase
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-
-// 2. Authentication Setup (for use in AuthContext)
-export const setupAuth = (callback) => {
-    // This listener handles sign-in with the token or anonymously
-    onAuthStateChanged(auth, async (user) => {
-        if (!user) {
-            try {
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (error) {
-                console.error("Authentication failed, proceeding anonymously:", error);
-            }
+const setupAuth = (callback) => {
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      try {
+        if (import.meta.env.VITE_FIREBASE_CUSTOM_TOKEN) {
+          await signInWithCustomToken(auth, import.meta.env.VITE_FIREBASE_CUSTOM_TOKEN);
+        } else {
+          await signInAnonymously(auth);
         }
-        // After sign-in attempt, get the definitive userId
-        const userId = auth.currentUser?.uid || crypto.randomUUID();
-        callback(userId);
-    });
+      } catch (error) {
+        console.error("Authentication failed, proceeding anonymously:", error);
+      }
+    }
+    const userId = auth.currentUser?.uid || crypto.randomUUID();
+    callback(userId);
+  });
 };
 
-export { db, auth, appId };
+export { db, auth, app, setupAuth };

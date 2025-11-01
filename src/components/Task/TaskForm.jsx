@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 // NOTE: These components need to be generated/resolved to run correctly
 import Button from '../UI/Button'; 
-import ColorPicker from '../UI/ColorPicker'; 
 
 /**
  * Form for creating a new task or editing an existing one.
@@ -121,13 +120,11 @@ const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => 
           </select>
         </div>
 
-        {/* Color Picker (Placeholder for custom component) */}
+        {/* Color Picker (using HTML input type="color") */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Task Color (Override)
           </label>
-          {/* ColorPicker is a missing dependency */}
-          {/* <ColorPicker selectedColor={color} onChange={setColor} /> */}
           <input
             type="color"
             value={color}
