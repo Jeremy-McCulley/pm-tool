@@ -10,6 +10,7 @@ import ProjectForm from './components/Project/ProjectForm';
 import ProjectList from './components/Project/ProjectList';
 import TaskForm from './components/Task/TaskForm';
 import KanbanBoard from './components/KanbanBoard';
+import './styles/global.less';
 // --- Modal Component ---
 const Modal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
@@ -19,7 +20,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         <div className="">
           <h3 className="">{title}</h3>
           <button onClick={onClose} className="" aria-label="Close modal">
-            <X className="w-5 h-5" />
+            <X className="" />
           </button>
         </div>
         <div className="">{children}</div>
@@ -34,13 +35,14 @@ const Header = ({ projectName, view, setView, onOpenForm, onSignOut }) => {
 
   return (
     <header className="mainHeading">
-      <div className="">
-        <div className="">
+      <div className="headingContainer">
+        <div className="logoContainer">
+          <img src='black-orange-white-logo-transparent.png' alt='Jeremy McCulley'/>
           <h1 className=""><ListChecks className="" />Task Flow</h1>
           {projectName && (<span className="">{projectName}</span>)}
         </div>
 
-        <nav className="">
+        <nav className="btnContainer">
           {projectName && (
             <>
               <button onClick={() => setView('board')}>
@@ -55,25 +57,17 @@ const Header = ({ projectName, view, setView, onOpenForm, onSignOut }) => {
           )}
 
           {!projectName && view === 'list' && (
-            <button onClick={() => onOpenForm('project')} className="">
-              <Plus className="" />
+            <button onClick={() => onOpenForm('project')} className="newProject">
               New Project
             </button>
           )}
           {projectName && view === 'board' && (
-            <button onClick={() => onOpenForm('task')} className="">
-              <Plus className="" />
+            <button onClick={() => onOpenForm('task')} className="newTask">
               New Task
             </button>
           )}
 
-          {userId && (
-            <span className="" title="Your User ID">
-              User: {userId}
-            </span>
-          )}
-          <button onClick={onSignOut} className="" title="Sign Out">
-            <LogOut className="" />
+          <button onClick={onSignOut} className="signOut" title="Sign Out">
             Exit
           </button>
         </nav>
@@ -153,7 +147,14 @@ const AppContent = () => {
   return (
     <div className="manAppContainer">
       <Header projectName={currentProject?.name} view={view} setView={setView} onOpenForm={handleOpenForm} onSignOut={onSignOut} />
-      <main className="">{renderContent()}</main>
+      <section className='welcomeMsg'>
+        {userId && (<span className="" title="Your User ID">Welcome User: {userId}</span>)}
+      </section>
+      <main className="">{renderContent()}
+        <section className='masthead'>
+          <h2>Welcome to Task Flow</h2>
+        </section>
+      </main>
       <Modal isOpen={!!modal.type} onClose={handleCloseModal} title={modal.type === 'project' ? (modal.data ? 'Edit Project' : 'Create Project') : (modal.data ? 'Edit Task' : 'Create Task')}>
         {renderModalContent()}
       </Modal>

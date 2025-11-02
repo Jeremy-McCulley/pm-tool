@@ -27,7 +27,7 @@ const ProjectList = ({ onSelect, onEdit, onDelete }) => {
   // --- Empty State ---
   if (projects.length === 0) {
     return (
-      <div className="">
+      <div className="noProjectFound">
         <FiAlertTriangle className="" />
         <h2 className="">No Projects Found</h2>
         <p className="">Click the "Create New Project" button above to get started!</p>
