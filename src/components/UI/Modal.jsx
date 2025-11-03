@@ -37,23 +37,23 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   // The Modal HTML structure (rendered inside the Portal)
   const modalContent = (
     // Backdrop overlay
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900 bg-opacity-75 transition-opacity" onClick={onClose}>
+    <div className="" onClick={onClose}>
       
       {/* Modal Container */}
       <div 
         ref={modalRef}
-        className="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto transform transition-all duration-300 scale-100 opacity-100"
+        className=""
         // Prevent closing the modal when clicking on the content itself
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header (Title and Close Button) */}
-        <div className="flex justify-between items-center p-5 border-b border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-900">
+        <div className="">
+          <h3 className="">
             {title || 'Modal'}
           </h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100"
+            className=""
             aria-label="Close modal"
           >
             <FiX size={24} />

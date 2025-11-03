@@ -24,13 +24,12 @@ const ColorPicker = ({ selectedColor, onChange }) => {
   };
 
   return (
-    <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-lg">
+    <div className="colorPickerContainer">
       {colors.map((color) => (
         <button
           key={color}
           type="button"
           onClick={() => handleColorChange(color)}
-          className={`w-8 h-8 rounded-full border-2 transition-transform duration-150 shadow-md`}
           style={{ backgroundColor: color, borderColor: color === selectedColor ? '#3b82f6' : 'transparent' }}
           aria-label={`Select color ${color}`}
         >

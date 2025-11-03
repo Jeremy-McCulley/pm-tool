@@ -62,20 +62,20 @@ const ProjectForm = ({ projectToEdit, onSave, onCancel, dbService }) => {
       )}
       <form onSubmit={handleSubmit} className="">
         {/* Project Name Input */}
-        <div>
+        <div className='projectNameInput'>
           <label htmlFor="name" className="">Project Name</label>
           <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} className="" placeholder="e.g., Q4 Marketing Campaign" required disabled={isLoading} />
         </div>
 
         {/* Project Stages Input */}
-        <div>
+        <div className='projectStagesInput'>
           <label htmlFor="stages" className="">Project Stages (Comma-separated)</label>
           <input type="text" id="stages" value={stagesInput} onChange={(e) => setStagesInput(e.target.value)} className="" placeholder="e.g., Backlog, Design, Development, Review" required disabled={isLoading} />
           <p className="">These will be your column headers on the board.</p>
         </div>
 
         {/* Color Picker */}
-        <div>
+        <div className="projectColorInput">
           <label className="">
             Project Color
           </label>
@@ -83,7 +83,7 @@ const ProjectForm = ({ projectToEdit, onSave, onCancel, dbService }) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="">
+        <div className="btnContainer">
           <button type="button" onClick={onCancel} className="" disabled={isLoading}>
             Cancel
           </button>

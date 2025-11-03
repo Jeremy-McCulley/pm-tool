@@ -1,3 +1,85 @@
 // Import variables.less, mixins.less
 @import "variables.less";
 @import "mixins.less";
+
+.noProjectFound{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 10px 0;
+    padding: 0 10px;
+    svg{
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+        stroke: @color-primary;
+    }
+    h2{
+        margin-right: 15px;
+    }
+}
+.modalContainer{
+    padding: 2%;
+    margin-bottom: 15px;
+    .modalHeader{
+        .flex-row(flex-start, center, 10px);
+        .modalHeaderTitle{
+            font-size: @font-size-xl;
+        }
+    }
+    .modalBody{
+        .projectNameInput{
+            .flex-row(flex-start, center, 10px);
+            padding: 10px 0; 
+            label{
+                margin-right: 15px;
+            }
+            input{
+                padding: 5px 5px;
+                border: solid 1px @color-primary-dark;
+            }
+        }
+        .projectStagesInput{
+            .flex-row(flex-start, center, 10px);
+            padding: 10px 0;
+            label{
+                margin-right: 15px;
+            }
+            input{
+                padding: 5px 5px;
+                border: solid 1px @color-primary-dark;
+            }
+        }
+        .projectColorInput{
+            padding: 10px 0;
+            .colorPickerContainer{
+                .flex-row(flex-start, center, 10px);
+                flex-wrap: wrap;
+                margin-top: 15px;
+                button{
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                }
+                input{
+                    height: 25px;
+                }
+            }
+        }
+        .btnContainer{
+            button{
+                margin: auto 10px;
+                padding: 15px 45px;
+                font-size: @font-size-base;
+                background-color: @color-primary;
+                color: @color-text-light;
+                border: solid 2px @color-primary;
+                transition: @transition-slow;
+                &:hover{
+                    background-color: @color-bg;
+                    border-radius: 5px;
+                }
+            }
+        }
+    }
+}

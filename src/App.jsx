@@ -17,13 +17,13 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   return (
     <div className="modalContainer">
       <div className="" onClick={e => e.stopPropagation()}>
-        <div className="">
-          <h3 className="">{title}</h3>
+        <div className="modalHeader">
+          <h3 className="modalHeaderTitle">{title}</h3>
           <button onClick={onClose} className="" aria-label="Close modal">
             <X className="" />
           </button>
         </div>
-        <div className="">{children}</div>
+        <div className="modalBody">{children}</div>
       </div>
     </div>
   );
