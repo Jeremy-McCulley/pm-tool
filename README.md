@@ -24,7 +24,7 @@ Key features include dynamic color coding for projects and tasks, and an interac
 
 ## ✨ Features
 
-Based on the application code and provided information, the key features include:
+The key features include:
 
 * **Kanban Board Interface:** Visually manage tasks using an industry-standard board layout with customizable columns (stages) defined per project.
 * **Drag and Drop Functionality:** Effortlessly move tasks between stages using the `react-beautiful-dnd` library (via `@hello-pangea/dnd`) for a seamless workflow update.
