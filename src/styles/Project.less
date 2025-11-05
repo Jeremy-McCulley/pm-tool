@@ -8,6 +8,7 @@
     flex-wrap: wrap;
     margin: 10px 0;
     padding: 0 10px;
+    order: 3;
     svg{
         width: 50px;
         height: 50px;
@@ -18,9 +19,50 @@
         margin-right: 15px;
     }
 }
+.singleProjectContainer{
+    order: 5;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 15px;
+    .singleProjectItem{
+        width: 25%;
+        padding: 2%;
+        h2{
+            font-size: @font-size-lg;
+        }
+        .editDelBtnContainer{
+            .flex-row(flex-start, center, 10px);
+            padding: 10px 0;
+            button{
+                width: 35px;
+                height: 35px;
+                svg{
+                    width: 25px;
+                    height: 25px;
+                }
+            }
+        }
+        .taskProjectCounterContainer{
+           .flex-row(flex-start, center, 10px); 
+           padding: 10px 0;
+           p{
+            font-size: @font-size-base;
+           }
+        }
+        .viewBtn{
+            min-width: 125px;
+            min-height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: @font-size-base;
+        }
+    }
+}
 .modalContainer{
     padding: 2%;
     margin-bottom: 15px;
+    order: 4;
     .modalHeader{
         .flex-row(flex-start, center, 10px);
         .modalHeaderTitle{

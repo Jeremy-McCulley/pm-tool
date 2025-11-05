@@ -79,7 +79,8 @@ const Header = ({ projectName, view, setView, onOpenForm, onSignOut }) => {
 // --- Main App Content ---
 const AppContent = () => {
   const { onSignOut, userId } = useAuth();
-  const { projects, selectedProject, setSelectedProject, tasks, fetchTasksByProject } = useProject();
+  // 🚨 FIX 1: Destructure 'selectProject' (the correct context function)
+  const { projects, selectedProject, selectProject, tasks, fetchTasksByProject } = useProject();
 
   const [modal, setModal] = useState({ type: null, data: null, initialStage: null });
   const [view, setView] = useState('list');
@@ -104,24 +105,28 @@ const AppContent = () => {
 
   // --- Project Handlers ---
   const handleSelectProject = useCallback((project) => {
-    setSelectedProject(project);
+    // 🚨 FIX 2: Use the context function to set the selected project ID
+    selectProject(project.id);
+    
+    // Set view and fetch tasks based on the selected project
     setView('board');
     fetchTasksByProject(project.id);
-  }, [setSelectedProject, fetchTasksByProject]);
+  }, [selectProject, fetchTasksByProject]);
 
   const handleDeleteProject = useCallback(async (projectId) => {
     if (window.confirm("Delete this project and all tasks?")) {
       try {
         await dbServices.deleteProject(projectId);
         if (selectedProject?.id === projectId) {
-          setSelectedProject(null);
-          setView('list');
+          // If the selected project is deleted, clear the view
+          setView('list'); 
+          // Note: If you have a clearSelectedProject function in context, call it here too.
         }
       } catch (err) {
         console.error(err);
       }
     }
-  }, [selectedProject, setSelectedProject]);
+  }, [selectedProject]);
 
   // --- Render Logic ---
   const currentProject = useMemo(() => projects.find(p => p.id === selectedProject?.id) || null, [projects, selectedProject]);
@@ -147,17 +152,18 @@ const AppContent = () => {
   return (
     <div className="manAppContainer">
       <Header projectName={currentProject?.name} view={view} setView={setView} onOpenForm={handleOpenForm} onSignOut={onSignOut} />
-      <section className='welcomeMsg'>
-        {userId && (<span className="" title="Your User ID">Welcome User: {userId}</span>)}
-      </section>
+      
       <main className="">{renderContent()}
         <section className='masthead'>
           <h2>Welcome to Task Flow</h2>
         </section>
-      </main>
-      <Modal isOpen={!!modal.type} onClose={handleCloseModal} title={modal.type === 'project' ? (modal.data ? 'Edit Project' : 'Create Project') : (modal.data ? 'Edit Task' : 'Create Task')}>
+        <section className='welcomeMsg'>
+          {userId && (<span className="" title="Your User ID">Welcome User: {userId}</span>)}
+        </section>
+        <Modal isOpen={!!modal.type} onClose={handleCloseModal} title={modal.type === 'project' ?   (modal.data ? 'Edit Project' : 'Create Project') : (modal.data ? 'Edit Task' : 'Create Task')}>
         {renderModalContent()}
-      </Modal>
+        </Modal>
+      </main>
     </div>
   );
 };

@@ -3,18 +3,9 @@ import { useProject } from '../../contexts/ProjectContext';
 import ProjectCard from './ProjectCard';
 import { FiLoader, FiAlertTriangle } from 'react-icons/fi';
 
-/**
- * Displays the list of all projects and handles the loading/error states.
- * This component gets its data from ProjectContext.
- * @param {object} props
- * @param {function} props.onSelect - Passed to ProjectCard to select a project.
- * @param {function} props.onEdit - Passed to ProjectCard to edit a project.
- * @param {function} props.onDelete - Passed to ProjectCard to delete a project.
- */
 const ProjectList = ({ onSelect, onEdit, onDelete }) => {
   const { projects, projectListLoading } = useProject();
 
-  // --- Loading State ---
   if (projectListLoading) {
     return (
       <div className="">
@@ -24,7 +15,6 @@ const ProjectList = ({ onSelect, onEdit, onDelete }) => {
     );
   }
 
-  // --- Empty State ---
   if (projects.length === 0) {
     return (
       <div className="noProjectFound">
@@ -35,14 +25,13 @@ const ProjectList = ({ onSelect, onEdit, onDelete }) => {
     );
   }
 
-  // --- Success State (Grid View) ---
   return (
-    <div className="">
+    <div className="singleProjectContainer">
       {projects.map(project => (
         <ProjectCard
           key={project.id}
           project={project}
-          onSelect={onSelect}
+          onView={() => onSelect(project)}
           onEdit={onEdit}
           onDelete={onDelete}
         />
