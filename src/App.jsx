@@ -44,19 +44,19 @@ const Header = ({ projectName, view, setView, onOpenForm, onSignOut }) => {
 
         <nav className="btnContainer">
           {projectName && (
-            <>
-              <button onClick={() => setView('board')}>
-                <LayoutDashboard className="" />
+          <>
+            <button onClick={() => setView('board')}>
+              <LayoutDashboard className="" />
                 Board
-              </button>
-              <button onClick={() => setView('list')}>
-                <Home className="" />
+            </button>
+            <button onClick={() => setView('list')}>
+              <Home className="" />
                 Projects
-              </button>
-            </>
+            </button>
+          </>
           )}
 
-          {!projectName && view === 'list' && (
+            {!projectName && view === 'list' && (
             <button onClick={() => onOpenForm('project')} className="newProject">
               New Project
             </button>
@@ -79,10 +79,7 @@ const Header = ({ projectName, view, setView, onOpenForm, onSignOut }) => {
 // --- Main App Content ---
 const AppContent = () => {
   const { onSignOut, userId } = useAuth();
-  
-  // CRITICAL FIX: Ensure fetchTasksByProject is NOT destructured here.
   const { projects, selectedProject, selectProject, tasks } = useProject(); 
-
   const [modal, setModal] = useState({ type: null, data: null, initialStage: null });
   const [view, setView] = useState('list');
 
@@ -90,8 +87,8 @@ const AppContent = () => {
   useEffect(() => {
     dbServices.initializeDbServices(db, auth, app.options.appId);
     setupAuth((uid) => {
-      console.log("Logged in user:", uid);
-    });
+    console.log("Logged in user:", uid);
+  });
   }, []);
 
   // --- Modal Handlers ---
@@ -101,14 +98,12 @@ const AppContent = () => {
 
   const handleCloseModal = useCallback(() => {
     setModal({ type: null, data: null, initialStage: null });
-    // CRITICAL FIX: Removed fetchTasksByProject call. Task streaming handles the refresh.
   }, []);
 
   // --- Project Handlers ---
   const handleSelectProject = useCallback((project) => {
     selectProject(project.id);
     setView('board');
-    // CRITICAL FIX: Removed fetchTasksByProject call.
   }, [selectProject]);
 
   const handleDeleteProject = useCallback(async (projectId) => {
@@ -123,6 +118,15 @@ const AppContent = () => {
       }
     }
   }, [selectedProject]);
+  const handleUpdateTaskStage = useCallback(async (taskId, newStage) => {
+    try {
+      // Calls the database service function
+      await dbServices.updateTaskStage(taskId, newStage);
+      console.log(`Task ${taskId} stage successfully updated to ${newStage}.`);
+    } catch (err) {
+      console.error("Failed to update task stage:", err);
+    }
+  }, []);
 
   // --- Render Logic ---
   const currentProject = useMemo(() => projects.find(p => p.id === selectedProject?.id) || null, [projects, selectedProject]);
@@ -131,7 +135,16 @@ const AppContent = () => {
     if (view === 'list' || !currentProject) {
       return <ProjectList onSelect={handleSelectProject} onEdit={(p) => handleOpenForm('project', p)} onDelete={handleDeleteProject} />;
     }
-    return <KanbanBoard project={currentProject} tasks={tasks} onAddTask={(stage) => handleOpenForm('task', null, stage)} onEditTask={(task) => handleOpenForm('task', task)} />;
+    return (
+        <KanbanBoard 
+            project={currentProject} 
+            tasks={tasks} 
+            onAddTask={(stage) => handleOpenForm('task', null, stage)} 
+            onEditTask={(task) => handleOpenForm('task', task)} 
+            // FIXED: Passing the required function prop
+            onUpdateTaskStage={handleUpdateTaskStage}
+        />
+    );
   };
 
   const renderModalContent = () => {
@@ -139,10 +152,8 @@ const AppContent = () => {
       case 'project':
         return <ProjectForm projectToEdit={modal.data} onSave={handleCloseModal} onCancel={handleCloseModal} dbService={dbServices} />;
       case 'task':
-        // The error indicates TaskForm is being rendered, so we MUST ensure the props are correct.
-        // It should ONLY receive 'project' when rendering. currentProject handles the null check.
         return <TaskForm project={currentProject} taskToEdit={modal.data} initialStage={modal.initialStage} onSave={handleCloseModal} dbServices={dbServices} />;
-      default:
+        default:
         return null;
     }
   };
@@ -150,7 +161,7 @@ const AppContent = () => {
   return (
     <div className="manAppContainer">
       <Header projectName={currentProject?.name} view={view} setView={setView} onOpenForm={handleOpenForm} onSignOut={onSignOut} />
-      
+
       <main className="">{renderContent()}
         <section className='masthead'>
           <h2>Welcome to Task Flow</h2>
@@ -159,7 +170,7 @@ const AppContent = () => {
           {userId && (<span className="" title="Your User ID">Welcome User: {userId}</span>)}
         </section>
         <Modal isOpen={!!modal.type} onClose={handleCloseModal} title={modal.type === 'project' ?   (modal.data ? 'Edit Project' : 'Create Project') : (modal.data ? 'Edit Task' : 'Create Task')}>
-        {renderModalContent()}
+          {renderModalContent()}
         </Modal>
       </main>
     </div>
