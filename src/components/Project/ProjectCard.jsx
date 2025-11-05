@@ -52,7 +52,7 @@ const ProjectCard = ({ project, onView, onEdit, onDelete }) => {
 
       {/* View Button */}
       <button 
-        onClick={() => onView(project)} // ⬅️ FIX: Pass the full 'project' object
+        onClick={() => onView(project)} 
         className="viewBtn"
         style={viewButtonStyle}>
         <span>View Board</span>

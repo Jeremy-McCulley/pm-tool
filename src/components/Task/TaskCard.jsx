@@ -1,170 +1,63 @@
-import React, { useState } from 'react';
-// NOTE: These components need to be generated/resolved to run correctly
-import Button from '../UI/Button'; 
-import ColorPicker from '../UI/ColorPicker'; 
+import React from 'react';
+import { Draggable } from "@hello-pangea/dnd";
+import { Trash2, Edit } from 'lucide-react';
 
 /**
- * Form for creating a new task or editing an existing one.
+ * Renders a draggable card for a single task.
  *
  * @param {object} props
- * @param {object} props.project - The current project object (to get stages and project color).
- * @param {object | null} props.taskToEdit - The task object if editing, or null if creating.
- * @param {string | null} props.initialStage - The stage to default to when creating a new task (from KanbanColumn).
- * @param {function} props.onSave - Callback function called on successful save/update.
- * @param {object} props.dbServices - CRUD service object.
+ * @param {object} props.task - The task object.
+ * @param {number} props.index - The index for the Draggable component.
+ * @param {function} props.onEdit - Handler to open the task edit form.
+ * @param {function} props.onDelete - Handler to delete the task.
  */
-const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => {
-  const isEditing = !!taskToEdit;
-  const { id: projectId, stages = [], color: projectColor } = project;
-
-  // Initialize state
-  const [title, setTitle] = useState(taskToEdit?.title || '');
-  const [description, setDescription] = useState(taskToEdit?.description || '');
-  const [stage, setStage] = useState(taskToEdit?.stage || initialStage || stages[0] || 'Todo');
-  // Default task color to the project's color if creating, or the task's color if editing
-  const [color, setColor] = useState(taskToEdit?.color || projectColor || '#3b82f6'); 
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!title.trim()) {
-      setError('Task title cannot be empty.');
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    const taskData = {
-      title: title.trim(),
-      description: description.trim(),
-      stage: stage,
-      color: color,
-      projectId: projectId,
-      updatedAt: new Date().toISOString(),
-    };
-
-    try {
-      if (isEditing) {
-        // Update an existing task
-        await dbServices.updateTask(taskToEdit.id, taskData);
-      } else {
-        // Create a new task
-        taskData.createdAt = new Date().toISOString();
-        // Set a default order for new tasks (can be improved with a numeric field)
-        taskData.order = new Date().getTime(); 
-        await dbServices.createTask(taskData);
-      }
-      onSave(); // Close modal and refresh data
-    } catch (err) {
-      console.error('Task save error:', err);
-      setError(`Failed to ${isEditing ? 'update' : 'create'} task. Please check the console.`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+const TaskCard = ({ task, index, onEdit, onDelete }) => {
+  
+  // Use task color if defined, otherwise fall back to a default
+  const cardColor = task.color || '#3b82f6';
+  
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Title Input */}
-      <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-          Task Title
-        </label>
-        <input
-          type="text"
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-          placeholder="e.g., Implement Firebase integration"
-          required
-          disabled={isLoading}
-        />
-      </div>
-
-      {/* Description Textarea */}
-      <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-          Description (Optional)
-        </label>
-        <textarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows="3"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 resize-none"
-          placeholder="Detailed steps, links, or notes for the task."
-          disabled={isLoading}
-        />
-      </div>
-      
-      {/* Stage Selector and Color Picker (Side-by-Side) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Stage Selector */}
-        <div>
-          <label htmlFor="stage" className="block text-sm font-medium text-gray-700 mb-1">
-            Stage / Column
-          </label>
-          <select
-            id="stage"
-            value={stage}
-            onChange={(e) => setStage(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-white"
-            required
-            disabled={isLoading}
-          >
-            {stages.map(s => (
-              <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Color Picker (Placeholder for custom component) */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Task Color (Override)
-          </label>
-          {/* ColorPicker is a missing dependency */}
-          {/* <ColorPicker selectedColor={color} onChange={setColor} /> */}
-          <input
-            type="color"
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
-            className="w-full h-10 rounded-lg border-0 cursor-pointer"
-            title="Choose your task color"
-            disabled={isLoading}
-          />
-        </div>
-      </div>
-
-
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg text-sm" role="alert">
-          {error}
+    <Draggable draggableId={task.id} index={index}>
+      {(provided, snapshot) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          className={`taskCard ${snapshot.isDragging ? 'isDragging' : ''}`}
+          style={{ 
+            ...provided.draggableProps.style,
+            borderLeft: `5px solid ${cardColor}`, // Highlight color on the side
+          }}
+        >
+          {/* Card Content */}
+          <div className="cardBody">
+            <h4 className="cardTitle">{task.title}</h4>
+            {task.description && (
+              <p className="cardDescription">{task.description}</p>
+            )}
+          </div>
+          
+          {/* Actions */}
+          <div className="cardActions">
+            <button 
+              onClick={() => onEdit(task)} 
+              className="editButton" 
+              aria-label="Edit Task"
+            >
+              <Edit size={16} />
+            </button>
+            <button 
+              onClick={() => onDelete(task.id)} 
+              className="deleteButton" 
+              aria-label="Delete Task"
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
         </div>
       )}
-
-      {/* Action Buttons */}
-      <div className="flex justify-end space-x-3 pt-4">
-        <Button 
-          variant="secondary" 
-          onClick={onSave} // Using onSave to close the modal generically
-          disabled={isLoading}
-        >
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          variant="primary"
-          isLoading={isLoading}
-        >
-          {isEditing ? 'Save Changes' : 'Create Task'}
-        </Button>
-      </div>
-    </form>
+    </Draggable>
   );
 };
 
-export default TaskForm;
+export default TaskCard;

@@ -1,26 +1,16 @@
 import React, { useState } from 'react';
-// NOTE: These components need to be generated/resolved to run correctly
 import Button from '../UI/Button'; 
 
-/**
- * Form for creating a new task or editing an existing one.
- *
- * @param {object} props
- * @param {object} props.project - The current project object (to get stages and project color).
- * @param {object | null} props.taskToEdit - The task object if editing, or null if creating.
- * @param {string | null} props.initialStage - The stage to default to when creating a new task (from KanbanColumn).
- * @param {function} props.onSave - Callback function called on successful save/update.
- * @param {object} props.dbServices - CRUD service object.
- */
 const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => {
   const isEditing = !!taskToEdit;
-  const { id: projectId, stages = [], color: projectColor } = project;
+  // CRITICAL FIX: Defensive destructuring: uses {} if project is null/undefined.
+  const { id: projectId, stages = [], color: projectColor } = project || {};
 
   // Initialize state
   const [title, setTitle] = useState(taskToEdit?.title || '');
   const [description, setDescription] = useState(taskToEdit?.description || '');
-  const [stage, setStage] = useState(taskToEdit?.stage || initialStage || stages[0] || 'Todo');
-  // Default task color to the project's color if creating, or the task's color if editing
+  // Default stage must use nullish coalescing to avoid errors if project or stages are undefined
+  const [stage, setStage] = useState(taskToEdit?.stage || initialStage || stages[0] || 'Todo'); 
   const [color, setColor] = useState(taskToEdit?.color || projectColor || '#3b82f6'); 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -30,6 +20,12 @@ const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => 
     if (!title.trim()) {
       setError('Task title cannot be empty.');
       return;
+    }
+    
+    // Safety check: ensure we have a project ID before saving a new task
+    if (!isEditing && !projectId) {
+        setError('Cannot create task: Project information is missing.');
+        return;
     }
 
     setIsLoading(true);
@@ -46,16 +42,13 @@ const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => 
 
     try {
       if (isEditing) {
-        // Update an existing task
         await dbServices.updateTask(taskToEdit.id, taskData);
       } else {
-        // Create a new task
         taskData.createdAt = new Date().toISOString();
-        // Set a default order for new tasks (can be improved with a numeric field)
         taskData.order = new Date().getTime(); 
         await dbServices.createTask(taskData);
       }
-      onSave(); // Close modal and refresh data
+      onSave();
     } catch (err) {
       console.error('Task save error:', err);
       setError(`Failed to ${isEditing ? 'update' : 'create'} task. Please check the console.`);
@@ -106,6 +99,7 @@ const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => 
           <label htmlFor="stage" className="block text-sm font-medium text-gray-700 mb-1">
             Stage / Column
           </label>
+          {/* Ensure stages is an array before mapping */}
           <select
             id="stage"
             value={stage}
@@ -114,7 +108,7 @@ const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => 
             required
             disabled={isLoading}
           >
-            {stages.map(s => (
+            {stages?.map(s => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
@@ -147,7 +141,7 @@ const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => 
       <div className="flex justify-end space-x-3 pt-4">
         <Button 
           variant="secondary" 
-          onClick={onSave} // Using onSave to close the modal generically
+          onClick={onSave}
           disabled={isLoading}
         >
           Cancel

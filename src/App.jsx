@@ -79,8 +79,9 @@ const Header = ({ projectName, view, setView, onOpenForm, onSignOut }) => {
 // --- Main App Content ---
 const AppContent = () => {
   const { onSignOut, userId } = useAuth();
-  // 🚨 FIX 1: Destructure 'selectProject' (the correct context function)
-  const { projects, selectedProject, selectProject, tasks, fetchTasksByProject } = useProject();
+  
+  // CRITICAL FIX: Ensure fetchTasksByProject is NOT destructured here.
+  const { projects, selectedProject, selectProject, tasks } = useProject(); 
 
   const [modal, setModal] = useState({ type: null, data: null, initialStage: null });
   const [view, setView] = useState('list');
@@ -100,27 +101,22 @@ const AppContent = () => {
 
   const handleCloseModal = useCallback(() => {
     setModal({ type: null, data: null, initialStage: null });
-    if (selectedProject) fetchTasksByProject(selectedProject.id);
-  }, [selectedProject, fetchTasksByProject]);
+    // CRITICAL FIX: Removed fetchTasksByProject call. Task streaming handles the refresh.
+  }, []);
 
   // --- Project Handlers ---
   const handleSelectProject = useCallback((project) => {
-    // 🚨 FIX 2: Use the context function to set the selected project ID
     selectProject(project.id);
-    
-    // Set view and fetch tasks based on the selected project
     setView('board');
-    fetchTasksByProject(project.id);
-  }, [selectProject, fetchTasksByProject]);
+    // CRITICAL FIX: Removed fetchTasksByProject call.
+  }, [selectProject]);
 
   const handleDeleteProject = useCallback(async (projectId) => {
     if (window.confirm("Delete this project and all tasks?")) {
       try {
         await dbServices.deleteProject(projectId);
         if (selectedProject?.id === projectId) {
-          // If the selected project is deleted, clear the view
           setView('list'); 
-          // Note: If you have a clearSelectedProject function in context, call it here too.
         }
       } catch (err) {
         console.error(err);
@@ -143,6 +139,8 @@ const AppContent = () => {
       case 'project':
         return <ProjectForm projectToEdit={modal.data} onSave={handleCloseModal} onCancel={handleCloseModal} dbService={dbServices} />;
       case 'task':
+        // The error indicates TaskForm is being rendered, so we MUST ensure the props are correct.
+        // It should ONLY receive 'project' when rendering. currentProject handles the null check.
         return <TaskForm project={currentProject} taskToEdit={modal.data} initialStage={modal.initialStage} onSave={handleCloseModal} dbServices={dbServices} />;
       default:
         return null;

@@ -79,21 +79,21 @@ const KanbanBoard = ({
 
 
   return (
-    <div className="p-6 h-full flex flex-col">
+    <div className="boardContainer">
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between border-b pb-4">
-        <h1 className="text-3xl font-extrabold text-gray-800 flex items-center">
+      <div className="boardContainerHeading">
+        <h3 className="">
             <button 
                 onClick={onBack} 
-                className="p-2 mr-2 rounded-full text-gray-500 hover:bg-gray-100 transition-colors"
+                className=""
                 aria-label="Back to project list"
             >
                 <FiArrowLeft size={24} />
             </button>
             {name}
-        </h1>
+        </h3>
         <div 
-            className="text-sm font-semibold px-3 py-1 rounded-full text-white"
+            className="projectId"
             style={{ backgroundColor: color }}
         >
             Project ID: {project.id}
@@ -103,7 +103,7 @@ const KanbanBoard = ({
       {/* Kanban Columns Container */}
       {/* DragDropContext is the mandatory wrapper for all D&D functionality */}
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex space-x-4 overflow-x-auto pb-4 flex-grow">
+        <div className="taskContainer">
           
           {stages.map((stage) => (
             <KanbanColumn
@@ -119,7 +119,7 @@ const KanbanBoard = ({
           ))}
 
           {/* Add a space at the end */}
-          <div className="w-4 flex-shrink-0"></div>
+          <div className=""></div>
         </div>
       </DragDropContext>
     </div>
