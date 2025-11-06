@@ -1,7 +1,3 @@
-// Import variables.less, mixins.less
-@import "variables.less";
-@import "mixins.less";
-
 .noProjectFound{
     display: flex;
     align-items: center;
@@ -24,6 +20,7 @@
     display: flex;
     flex-wrap: wrap;
     padding: 15px;
+    transition: @transition-base;
     .singleProjectItem{
         width: 25%;
         padding: 2%;
@@ -36,6 +33,8 @@
             button{
                 width: 35px;
                 height: 35px;
+                background-color: rgba(255, 255, 255, 0);
+                border: solid 2px @color-primary-light;
                 svg{
                     width: 25px;
                     height: 25px;
@@ -43,11 +42,12 @@
             }
         }
         .taskProjectCounterContainer{
-           .flex-row(flex-start, center, 10px); 
-           padding: 10px 0;
-           p{
-            font-size: @font-size-base;
-           }
+            .flex-row(flex-start, center, 10px); 
+            padding: 10px 0;
+            transition: @transition-base;
+            p{
+                font-size: @font-size-base;
+            }
         }
         .viewBtn{
             min-width: 125px;
@@ -63,6 +63,7 @@
     padding: 2%;
     margin-bottom: 15px;
     order: 4;
+    transition: @transition-base;
     .modalHeader{
         .flex-row(flex-start, center, 10px);
         .modalHeaderTitle{
@@ -70,6 +71,7 @@
         }
     }
     .modalBody{
+        transition: @transition-base;
         .projectNameInput{
             .flex-row(flex-start, center, 10px);
             padding: 10px 0; 
@@ -110,17 +112,7 @@
         }
         .btnContainer{
             button{
-                margin: auto 10px;
-                padding: 15px 45px;
-                font-size: @font-size-base;
-                background-color: @color-primary;
-                color: @color-text-light;
-                border: solid 2px @color-primary;
-                transition: @transition-slow;
-                &:hover{
-                    background-color: @color-bg;
-                    border-radius: 5px;
-                }
+                .primary-btn();
             }
         }
         .taskForm{
@@ -131,7 +123,9 @@
                     padding: 10px 15px;
                 }
                 textarea{
-                    padding: 10px 25px;
+                    padding: 5px 15px;
+                    height: 50px;
+                    width: 250px;
                 }
                 .formColorInput{
                     input{
@@ -140,12 +134,16 @@
                         height: 35px;
                     }
                 }
+                button{
+                    .primary-btn();
+                }
             }
         }
     }
 }
 .boardContainer{
     order: 6;
+    transition: @transition-base;
     .boardContainerHeading{
         .flex-row(flex-start, center, 10px);
         padding: 2%;

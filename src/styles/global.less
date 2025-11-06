@@ -8,6 +8,7 @@
 @import "mixins.less";
 @import "Project.less";
 @import "Task.less";
+
 // CSS Reset / Normalize
 *, *::before, *::after {
   box-sizing: border-box;
@@ -21,27 +22,27 @@ html {
 }
 // Typography Defaults
 body{
-    font-size: @font-size-base;
-    font-family: @font-secondary;
-    background-color: @color-bg;
-    color: @color-text-light;
+  font-size: @font-size-base;
+  font-family: @font-secondary;
+  background-color: @color-bg;
+  color: @color-text-light;
 }
 h1,h2,h3,h4,h5,h6{
-    font-size: @font-size-lg;
-    font-family: @font-primary;
+  font-size: @font-size-lg;
+  font-family: @font-primary;
 }
 h1{
-    font-size: @font-size-xl;
+  font-size: @font-size-xl;
 }
 // Main header
 .mainHeading{
   height: 150px;
   padding: 0 15px;
   .headingContainer{
-    .flex-row(unset, center, 1rem);
+    .flex-row(flex-start, center, 1rem);
     height: 100%;
     .logoContainer{
-      .flex-row(unset, center, 1rem);
+      .flex-row(flex-start, center, 1rem);
       flex-grow: 1;
       height: 100%;
       img{
@@ -49,7 +50,7 @@ h1{
         height: 100%;
       }
       h1{
-        .flex-row(unset, center, 1rem);
+        .flex-row(flex-start, center, 1rem);
         svg{
           stroke: @color-primary;
           height: 25px;
@@ -61,18 +62,7 @@ h1{
       .flex-row(space-between, center, 10px);
       button{
         .flex-row(space-between, center, 10px);
-        min-height: 60px;
-        margin: auto 10px;
-        padding: 15px 45px;
-        font-size: @font-size-base;
-        background-color: @color-primary;
-        color: @color-text-light;
-        border: solid 2px @color-primary;
-        transition: @transition-slow;
-        &:hover{
-          background-color: @color-bg;
-          border-radius: 5px;
-        }
+        .primary-btn();
       }
     }
   }

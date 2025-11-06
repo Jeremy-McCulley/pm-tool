@@ -3,12 +3,25 @@
 // Reusable style helpers
 // ===============================
 
-// Import variables.less
-@import "variables.less";
+// Primary Button Mixin
+.primary-btn() {
+  min-height: 60px;
+  margin: auto 10px;
+  padding: 15px 45px;
+  font-size: @font-size-base;
+  background-color: @color-primary;
+  color: @color-text-light;
+  border: solid 2px @color-primary;
+  transition: @transition-slow;
+  &:hover{
+    background-color: @color-bg;
+    border-radius: 5px; 
+  }
+}
 
 // FLEXBOX MIXINS
 // Center horizontally and vertically
-.flex-center() {
+.flex-center() {  
   display: flex;
   justify-content: center;
   align-items: center;

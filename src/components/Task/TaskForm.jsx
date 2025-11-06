@@ -77,7 +77,7 @@ const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => 
 
       {/* Description Textarea */}
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="description" className="">
           Description (Optional)
         </label>
         <textarea
@@ -85,17 +85,17 @@ const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => 
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows="3"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 resize-none"
+          className=""
           placeholder="Detailed steps, links, or notes for the task."
           disabled={isLoading}
         />
       </div>
       
       {/* Stage Selector and Color Picker (Side-by-Side) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="">
         {/* Stage Selector */}
         <div>
-          <label htmlFor="stage" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="stage" className="">
             Stage / Column
           </label>
           {/* Ensure stages is an array before mapping */}
@@ -103,7 +103,7 @@ const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => 
             id="stage"
             value={stage}
             onChange={(e) => setStage(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+            className=""
             required
             disabled={isLoading}
           >
@@ -122,7 +122,7 @@ const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => 
             type="color"
             value={color}
             onChange={(e) => setColor(e.target.value)}
-            className="w-full h-10 rounded-lg border-0 cursor-pointer"
+            className=""
             title="Choose your task color"
             disabled={isLoading}
           />
@@ -131,13 +131,13 @@ const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => 
 
 
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg text-sm" role="alert">
+        <div className="" role="alert">
           {error}
         </div>
       )}
 
       {/* Action Buttons */}
-      <div className="flex justify-end space-x-3 pt-4">
+      <div className="">
         <Button 
           variant="secondary" 
           onClick={onSave}
