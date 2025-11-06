@@ -3,7 +3,6 @@ import Button from '../UI/Button';
 
 const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => {
   const isEditing = !!taskToEdit;
-  // CRITICAL FIX: Defensive destructuring: uses {} if project is null/undefined.
   const { id: projectId, stages = [], color: projectColor } = project || {};
 
   // Initialize state
@@ -58,10 +57,10 @@ const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="taskForm">
       {/* Title Input */}
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="title" className="">
           Task Title
         </label>
         <input
@@ -69,7 +68,7 @@ const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => 
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+          className=""
           placeholder="e.g., Implement Firebase integration"
           required
           disabled={isLoading}
@@ -115,8 +114,8 @@ const TaskForm = ({ project, taskToEdit, initialStage, onSave, dbServices }) => 
         </div>
 
         {/* Color Picker (using HTML input type="color") */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className='formColorInput'>
+          <label className="">
             Task Color (Override)
           </label>
           <input

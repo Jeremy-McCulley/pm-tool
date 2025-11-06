@@ -1,3 +1,43 @@
 // Import variables.less, mixins.less
 @import "variables.less";
 @import "mixins.less";
+.taskContainer{
+    .flex-row(space-between, flex-start, 10px);
+    padding: 2%;
+    .mainTaskContainer{
+        max-width: 33.33%;
+        .taskHeader{
+            margin-bottom: 15px;
+            .taskTitle{
+                margin-bottom: 15px;
+            }
+            .addTaskBtn{
+                width: 30px;
+                height: 30px;
+                svg{
+                    width: 90%;
+                    height: 90%;
+                }
+            }
+        }
+        .taskCard{
+            margin-bottom: 25px;
+            .cardBody{
+                padding-left: 25px;
+            }
+            .cardActions{
+                padding-left: 25px;
+                .editButton, .deleteButton{
+                    margin-top: 15px;
+                    margin-right: 15px;
+                    width: 30px;
+                    height: 30px;
+                    svg{
+                        width: 80%;
+                        height: 80%;
+                    }
+                }
+            }
+        }
+    }
+}

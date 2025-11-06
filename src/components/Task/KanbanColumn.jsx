@@ -16,21 +16,14 @@ import { FiPlusCircle } from 'react-icons/fi';
  */
 const KanbanColumn = ({ stage, tasks, projectColor, onAddTask, onEditTask, onDeleteTask }) => {
   return (
-    <div className="flex flex-col flex-shrink-0 w-80 bg-gray-100 rounded-xl p-4 shadow-inner">
+    <div className="mainTaskContainer">
       
       {/* Column Header */}
-      <div className="flex justify-between items-center mb-4 pb-2 border-b border-gray-300">
-        <h3 
-          className="text-lg font-bold text-gray-700"
-          style={{ borderBottom: `4px solid ${projectColor}` }}
-        >
+      <div className="taskHeader">
+        <h3 className="taskTitle" style={{ borderBottom: `4px solid ${projectColor}` }}>
           {stage} ({tasks.length})
         </h3>
-        <button
-          onClick={() => onAddTask(stage)}
-          className="p-1 text-gray-500 hover:text-indigo-600 transition-colors"
-          aria-label={`Add task to ${stage}`}
-        >
+        <button onClick={() => onAddTask(stage)} className="addTaskBtn" aria-label={`Add task to ${stage}`}>
           <FiPlusCircle size={20} />
         </button>
       </div>
@@ -38,13 +31,7 @@ const KanbanColumn = ({ stage, tasks, projectColor, onAddTask, onEditTask, onDel
       {/* Droppable Area for Tasks */}
       <Droppable droppableId={stage}>
         {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className={`flex-grow min-h-[50px] transition-colors duration-150 ${
-              snapshot.isDraggingOver ? 'bg-indigo-100/50' : ''
-            }`}
-          >
+          <div ref={provided.innerRef} {...provided.droppableProps} className={`taskCardContainer ${snapshot.isDraggingOver ? 'bg-indigo-100/50' : ''}`}>
             {/* List of Task Cards */}
             {tasks.map((task, index) => (
               <TaskCard
